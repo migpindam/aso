@@ -2,4 +2,4 @@
 
 read -p "Dime una palabra: " palabra
 
-echo "$palabra" > lista.txt
+echo "$palabra" >> lista.txt
