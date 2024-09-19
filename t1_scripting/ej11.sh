@@ -6,7 +6,7 @@ if [[ $# -ne 2 ]]; then
 elif [[ ! -f $1 ]]; then
    echo "El archivo no existe o no es un fichero ordinario"
    exit
-elif [[ -f $2 ]]; then
+elif [[ -e $2 ]]; then
    echo "El archivo ya existe"
    exit
 fi
