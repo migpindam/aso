@@ -1,0 +1,36 @@
+#Unidad Organizativa Empresa
+
+New-ADOrganizationalUnit -Name "Empresa" -Path "DC=empresa,DC=local"
+
+
+#Departamentos y Grupos
+
+$departamentos=import-CSV C:\Users\Administrador\Desktop\departamentos.csv -Delimiter ";"
+
+foreach ($dato in $departamentos) {
+
+    New-ADOrganizationalUnit -Name "$($dato.departamento)" -Path "OU=Empresa,DC=empresa,DC=local" -Description "$($dato.descripcion)"
+    
+    $grupo=$($dato.departamento).ToLower()
+    New-ADGroup -Name "g.$grupo" -GroupCategory Security -GroupScope Global -Path "OU=$($dato.departamento),OU=Empresa,DC=empresa,DC=local"
+    
+}
+
+
+#Empleados
+
+$empleados=import-CSV C:\Users\Administrador\Desktop\empleados.csv -Delimiter ";"
+
+foreach ($dato in $empleados) {
+
+    $nombre=$($dato.nombre).Tolower()
+    $apellido=$($dato.apellido).Tolower()
+    $login="$nombre.$apellido"
+    $grupo=$($dato.departamento).ToLower()
+    
+    New-ADUser -Name "$($dato.nombre) $($dato.apellido)" -Path "OU=$($dato.departamento),OU=Empresa,DC=Empresa,DC=Local" -SamAccountName "$login" -UserPrincipalName "$login@empresa.local" -AccountPassword (ConvertTo-SecureString "aso2025." -AsPlainText -Force) -GivenName "$($dato.nombre)" -Surname "$($dato.apellido)" -ChangePasswordAtLogon $true -Enabled $true
+    
+    Add-ADGroupMember -Identity "g.$grupo" -Members $login
+
+}
+
