@@ -78,7 +78,7 @@ foreach ($dato in $empleados) {
 
             $acl.SetAccessRule($ace)
 
-# Los del usuario
+# Los del usuario //// No es necesario el if....
 
         foreach ($valor in $empleados) {
 
